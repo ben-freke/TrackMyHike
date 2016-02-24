@@ -18,6 +18,13 @@ class TrackController extends ControllerBase {
         if ($request->isPost()){
             $data = json_decode(file_get_contents('php://input'), true);
 
+            $notification = new notifications();
+            $notification->type = $data['Type'];
+            $notification->messageID = $data['MessageId'];
+            $notification->signature = $data['Signature'];
+            $notification->save();
+
+
             if ($data['Type'] == "SubscriptionConfirmation")
             {
                 /**
@@ -25,22 +32,31 @@ class TrackController extends ControllerBase {
                  */
                 $xml = file_get_contents($data['SubscribeURL']);
             }
-            $payload = $data['Message'];
-            foreach ($payload as $item)
+            if ($data['Type'] == "Notification")
             {
-                $location = new locations();
-                $location->userID = $item['userid'];
-                $location->long = $item['long'];
-                $location->lat = $item['lat'];
-                $location->altitude = $item['altitude'];
-                $location->accuracy = $item['accuracy'];
-                $location->time = $item['time'];
-                if ($location->save()){
-                }
-                else {
-                    echo $location->getMessages();
+                /**
+                 * AWS Notification
+                 */
+
+
+                $payload = $data['Message'];
+                foreach ($payload as $item)
+                {
+                    $location = new locations();
+                    $location->userID = $item['userid'];
+                    $location->long = $item['long'];
+                    $location->lat = $item['lat'];
+                    $location->altitude = $item['altitude'];
+                    $location->accuracy = $item['accuracy'];
+                    $location->time = $item['time'];
+                    if ($location->save()){
+                    }
+                    else {
+                        echo $location->getMessages();
+                    }
                 }
             }
+
 
             //print_r($data);
 
