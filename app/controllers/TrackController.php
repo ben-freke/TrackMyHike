@@ -18,6 +18,12 @@ class TrackController extends ControllerBase {
         if ($request->isPost()){
             $data = json_decode(file_get_contents('php://input'), true);
             $notification = new notifications();
+            if (!isset($data['Type'])){
+                $notification->type = "Error";
+                $notification->messageID = "Error";
+                $notification->signature = "Error";
+                $notification->status = "Stream could not be read";
+            }
             $notification->type = $data['Type'];
             $notification->messageID = $data['MessageId'];
             $notification->signature = $data['Signature'];
