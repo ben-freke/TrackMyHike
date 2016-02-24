@@ -18,27 +18,32 @@ class TrackController extends ControllerBase {
         if ($request->isPost()){
             $data = json_decode(file_get_contents('php://input'), true);
 
-            if ($data['type'] == "SubscriptionConfirmation")
+            if ($data['Type'] == "SubscriptionConfirmation")
             {
                 /**
                  * AWS Subscription
                  */
                 $xml = file_get_contents($data['SubscribeURL']);
             }
+            $payload = $data['Message'];
+            foreach ($payload as $item)
+            {
+                $location = new locations();
+                $location->userID = $item['userid'];
+                $location->long = $item['long'];
+                $location->lat = $item['lat'];
+                $location->altitude = $item['altitude'];
+                $location->accuracy = $item['accuracy'];
+                $location->time = $item['time'];
+                if ($location->save()){
+                }
+                else {
+                    echo $location->getMessages();
+                }
+            }
 
             //print_r($data);
-            $location = new locations();
-            $location->userID = $data['id'];
-            $location->long = $data['long'];
-            $location->lat = $data['lat'];
-            $location->altitude = $data['altitude'];
-            $location->accuracy = $data['accuracy'];
-            $location->time = $data['time'];
-            if ($location->save()){
-            }
-            else {
-                echo $location->getMessages();
-            }
+
         }
     }
 }
