@@ -40,21 +40,23 @@ class TrackController extends ControllerBase {
                 /**
                  * AWS Notification
                  */
-                $payload = $data['Message'];
+
+                $payload = json_decode($data['Message']);
                 foreach ($payload as $item)
                 {
                     $location = new locations();
-                    $location->userID = $item['userid'];
-                    $location->long = $item['long'];
-                    $location->lat = $item['lat'];
-                    $location->altitude = $item['altitude'];
-                    $location->accuracy = $item['accuracy'];
-                    $location->time = $item['time'];
+                    $location->userID = $item->userid;
+                    $location->long = $item->long;
+                    $location->lat = $item->lat;
+                    $location->altitude = $item->altitude;
+                    $location->accuracy = $item->accuracy;
+                    $location->time = $item->time;
                     if ($location->save()) {
                         $notification->status = "Saved";
                     }
                     else {
                     }
+
                         $notification->status = "Fail";
                     }
                 }
@@ -63,7 +65,6 @@ class TrackController extends ControllerBase {
             }
 
             if ($notification->save()) echo "Saved";
-            else echo $notification->getMessages();
 
         }
     }
