@@ -9,7 +9,7 @@
 use Phalcon\Mvc\View;
 
 
-class trackController extends ControllerBase {
+class TrackController extends ControllerBase {
 
     public function locationAction(){
         $this->view->setRenderLevel(\Phalcon\Mvc\View::LEVEL_NO_RENDER);
