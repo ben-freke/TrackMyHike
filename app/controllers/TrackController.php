@@ -17,29 +17,23 @@ class TrackController extends ControllerBase {
         $request = new \Phalcon\Http\Request();
         if ($request->isPost()){
             $data = json_decode(file_get_contents('php://input'), true);
-
             $notification = new notifications();
             $notification->type = $data['Type'];
             $notification->messageID = $data['MessageId'];
             $notification->signature = $data['Signature'];
-
-
-
             if ($data['Type'] == "SubscriptionConfirmation")
             {
                 /**
                  * AWS Subscription
                  */
                 $xml = file_get_contents($data['SubscribeURL']);
-                $notification->status = $xml;
+                $notification->status = base64_encode($xml);
             }
             else if ($data['Type'] == "Notification")
             {
                 /**
                  * AWS Notification
                  */
-
-
                 $payload = $data['Message'];
                 foreach ($payload as $item)
                 {
@@ -51,16 +45,20 @@ class TrackController extends ControllerBase {
                     $location->accuracy = $item['accuracy'];
                     $location->time = $item['time'];
                     if ($location->save()) {
-
                         $notification->status = "Saved";
                     }
                     else {
                     }
-                        $notification->status = $location->getMessages();
+                        $notification->status = "Fail";
                     }
                 }
-            else $notification->status = "Could not read from stream";
-            $notification->save();
+            else {
+                $notification->status = "Could not read from stream";
+            }
+
+            if ($notification->save()) echo "Saved";
+            else echo $notification->getMessages();
+
         }
     }
 }
