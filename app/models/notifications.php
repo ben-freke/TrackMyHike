@@ -8,6 +8,7 @@ class notifications extends Phalcon\Mvc\Model
     public $messageID;
     public $signature;
     public $timestamp;
+    public $status;
 
 
     public function initialize()

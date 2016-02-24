@@ -22,7 +22,7 @@ class TrackController extends ControllerBase {
             $notification->type = $data['Type'];
             $notification->messageID = $data['MessageId'];
             $notification->signature = $data['Signature'];
-            $notification->save();
+
 
 
             if ($data['Type'] == "SubscriptionConfirmation")
@@ -31,8 +31,9 @@ class TrackController extends ControllerBase {
                  * AWS Subscription
                  */
                 $xml = file_get_contents($data['SubscribeURL']);
+                $notification->status = $xml;
             }
-            if ($data['Type'] == "Notification")
+            else if ($data['Type'] == "Notification")
             {
                 /**
                  * AWS Notification
@@ -49,17 +50,17 @@ class TrackController extends ControllerBase {
                     $location->altitude = $item['altitude'];
                     $location->accuracy = $item['accuracy'];
                     $location->time = $item['time'];
-                    if ($location->save()){
+                    if ($location->save()) {
+
+                        $notification->status = "Saved";
                     }
                     else {
-                        echo $location->getMessages();
+                    }
+                        $notification->status = $location->getMessages();
                     }
                 }
-            }
-
-
-            //print_r($data);
-
+            else $notification->status = "Could not read from stream";
+            $notification->save();
         }
     }
 }
