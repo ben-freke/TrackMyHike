@@ -1,17 +1,15 @@
 <?php
 
 
-class locations extends Phalcon\Mvc\Model
+class tracks extends Phalcon\Mvc\Model
 {
     public $id;
-    public $userID;
-    public $lat;
-    public $long;
-    public $altitude;
-    public $accuracy;
+    public $userid;
+    public $name;
+    public $location;
+    public $distance;
+    public $status;
     public $time;
-    public $trackid;
-
 
     public function initialize()
     {

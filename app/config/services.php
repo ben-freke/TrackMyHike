@@ -18,9 +18,22 @@ $di->set('url', function() use ($config) {
  * Setting up the view component
  */
 $di->set('view', function() use ($config) {
-	$view = new \Phalcon\Mvc\View();
-	$view->setViewsDir($config->application->viewsDir);
-	return $view;
+    $view = new \Phalcon\Mvc\View();
+    $view->setViewsDir($config->application->viewsDir);
+    $view->registerEngines(array(
+        '.volt' => function($view, $di) {
+            $volt = new \Phalcon\Mvc\View\Engine\Volt($view, $di);
+            $volt->setOptions(array(
+                'compiledPath' => '../app/compiled/',
+                'stat' => true,
+                'compileAlways' => true
+            ));
+            return $volt;
+        }
+    ));
+
+
+    return $view;
 });
 
 /**
