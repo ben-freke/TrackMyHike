@@ -72,7 +72,7 @@ class TracksController extends ControllerBase
                 /**
                  * AWS Notification
                  */
-                $payload = json_decode($data['Message']);
+                $payload = json_decode(base64_decode($data['Message']));
                 foreach ($payload as $item)
                 {
                     $user = users::findFirst(array(
@@ -88,6 +88,7 @@ class TracksController extends ControllerBase
                         $location->lat = $item->lat;
                         $location->altitude = $item->altitude;
                         $location->accuracy = $item->accuracy;
+                        $location->speed = $item->speed;
                         $location->time = $item->time;
                         if ($location->save()) {
                             $notification->status = "Saved";

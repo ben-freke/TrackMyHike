@@ -10,6 +10,7 @@ class locations extends Phalcon\Mvc\Model
     public $altitude;
     public $accuracy;
     public $time;
+    public $speed;
     public $trackid;
 
 
