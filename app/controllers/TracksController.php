@@ -46,8 +46,6 @@ class TracksController extends ControllerBase
         $request = new \Phalcon\Http\Request();
         if ($request->isPost()){
             $data = json_decode(file_get_contents('php://input'), true);
-            print_r(file_get_contents('php://input'));
-            print_r($data);
             $notification = new notifications();
             if (!isset($data['Type'])){
                 $notification->type = "Error";
@@ -68,7 +66,6 @@ class TracksController extends ControllerBase
             }
             else if ($data['Type'] == "Notification")
             {
-
                 /**
                  * AWS Notification
                  */
@@ -94,8 +91,8 @@ class TracksController extends ControllerBase
                             $notification->status = "Saved";
                         }
                         else {
+                            $notification->status = "Fail";
                         }
-                        $notification->status = "Fail";
                     }
                     else {
                         return;
@@ -105,7 +102,6 @@ class TracksController extends ControllerBase
             else {
                 $notification->status = "Could not read from stream";
             }
-            if ($notification->save()) echo "Saved";
         }
     }
 
